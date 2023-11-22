@@ -3,6 +3,7 @@ django==4.2.7
 
 # zaleznosci dla testow
 pytest
+coverage
 
 # jakosc kodu
 mypy

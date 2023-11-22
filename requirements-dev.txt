@@ -1,3 +1,0 @@
-black
-
--r requirements.txt

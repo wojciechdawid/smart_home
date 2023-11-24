@@ -13,5 +13,3 @@ def pascal_triangle(n: int, to_str: bool = False) -> list | str:
     for i in range(n):
         last_str = last_str + f"{' ' * (n - i)}{' '.join([str(j) for j in table[i]])}{' ' * (n - i)}\n"  # noqa
     return last_str
-
-print(pascal_triangle(7, to_str=True))

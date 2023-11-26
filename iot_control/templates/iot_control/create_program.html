@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create program</title>
+</head>
+<body>
+<h3>Create program: {{ name }}</h3>
+<div>
+    <h5>Existing instructions:</h5>
+    {% if results|length != 0 %}
+        <table>
+            <tr>
+                <th>Device ID</th>
+                <th>Type of message</th>
+                <th>Message</th>
+            </tr>
+            {% for i in results%}
+            <tr>
+                <td>{{ i.device_id }}</td>
+                <td>{{ i.msg_type }}</td>
+                <td>{{ i.data }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>There are no instructions yet.</p>
+    {% endif %}
+</div>
+<div>
+    <form method="post">
+        {% csrf_token %}
+        <p>
+        <label for="dev_name">Device Name</label>
+        <select name="device_name" id="dev_name">
+          <option value=0>Hue Lights</option>
+          <option value=1>Smart Speaker</option>
+          <option value=2>Curtains</option>
+        </select>
+        </p>
+        <p>
+        <label for="msg_type">Type of activity</label>
+        <select name="message_type" id="msg_type">
+            <option value="SWITCH_ON">SWITCH ON</option>
+            <option value="SWITCH_OFF">SWITCH OFF</option>
+            <option value="CHANGE_COLOR">CHANGE COLOR</option>
+            <option value="PLAY_SONG">PLAY SONG</option>
+            <option value="OPEN">OPEN</option>
+            <option value="CLOSE">CLOSE</option>
+        </select>
+        </p>
+        <p>
+        <label for="msg_data">Title</label>
+        <input type="text" id="msg_data" name="message_text">
+        </p>
+        <p>
+        <input type="submit" value="Create instruction">
+        </p>
+    </form>
+</div>
+<a href="/iot"><input type=button value="Previous Page"></a>
+</body>
+</html>

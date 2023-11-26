@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Run program</title>
+</head>
+<body>
+<div>
+    <form method="post">
+        {% csrf_token %}
+    <p>
+        <label for="prg_type">Run program</label>
+        <select name="program_type" id="prg_type">
+            {% for k in results.keys %}
+                <option value="{{ k }}">{{ k }}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <p>
+        <input type="submit" value="Run program" name="run_program">
+    </p>
+    </form>
+</div>
+<div>
+    {{ running }}
+</div>
+<div>
+<a href="/iot"><input type=button value="Previous Page"></a>
+</div>
+</body>
+</html>

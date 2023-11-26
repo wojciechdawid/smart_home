@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart home programs</title>
+</head>
+<body>
+<h3>Select program to edit or add new</h3>
+<div>
+    {% if results|length == 0 %}
+    <p>There are no programs configured yet.</p>
+    {% else %}
+        <ul>
+        {% for k, v in results.items %}
+            <li><a href="{% url 'iot_control:modify_program' k %}">{{ k }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label for="prg_name">Name of a new program</label>
+            <input type="text" id="prg_name" name="program_name">
+        </p>
+        <p>
+            <input type="submit" value="Create program" name="create_program">
+        </p>
+    </form>
+    </div>
+</div>
+<div>
+    <p>
+        <a href="/iot/run"><input type="submit" value="Run program" name="run_program"></a>
+    </p>
+</div>
+</body>
+</html>

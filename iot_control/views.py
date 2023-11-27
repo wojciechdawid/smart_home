@@ -43,7 +43,7 @@ def run_program(request) -> HttpResponse:
     if prg_type:
         result = service.run_program(prg_type)
     else:
-        result = "No program selected"
+        result = ["No program selected"]
     return render(
         request=request,
         template_name="iot_control/run_program.html",

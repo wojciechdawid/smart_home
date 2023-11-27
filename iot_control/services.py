@@ -115,13 +115,34 @@ class IOTService:
     devices: list = []
     programs: dict[str, list[MessageDTO]] = {}
     baza_program = "programs.dat"
+    devices_file = "devices.dat"
+
+    @classmethod
+    def _load_devices(cls) -> list[Device]:
+        try:
+            with open(cls.devices_file, "rb") as f:
+                data = pickle.load(f)
+        except FileNotFoundError:
+            data = []
+        return data
+
+    @classmethod
+    def _save_devices(cls, devices: list[Device]):
+        with open(cls.devices_file, "wb") as f:
+            pickle.dump(devices, f)
+
 
     @classmethod
     def register_device(cls, device: int) -> None:
         """Method for registering new devices"""
         device.connect()
+        cls.devices = cls._load_devices()
+        for dev in cls.devices:
+            if device.__class__.__name__ == dev.__class__.__name__:
+                return None
         device.id = generate_id()
         cls.devices.append(device)
+        cls._save_devices(cls.devices)
 
     @classmethod
     def unregister_device(cls, device_id: string) -> None:
@@ -138,21 +159,21 @@ class IOTService:
                 cls.devices.remove(d)
 
     @classmethod
-    def run_program(cls, prg_type: str) -> str:
+    def run_program(cls, prg_type: str) -> list:
         """Method for running program"""
         cls.programs = cls._load_data()
         msg_list = cls.programs[prg_type]
-        new_line = "/n"
-        out_str = ""
+        out_list = []
         for msg in msg_list:
             for dev in cls.devices:
                 if msg.device_id == dev.id:
                     out = dev.send_message(message_type=msg.msg_type, data=msg.data)
-                    out_str += out + new_line
-
-        return (f"=====RUNNING PROGRAM====="
-                f"{new_line}{out_str}"
-                f"{new_line}=====END OF PROGRAM=====")
+                    out_list.append(out)
+        msg1 = "=====RUNNING PROGRAM====="
+        msg2 = "=====END OF PROGRAM====="
+        out_list.insert(0, msg1)
+        out_list.insert(len(out_list), msg2)
+        return out_list
 
 
 
@@ -166,9 +187,11 @@ class IOTService:
         return list_devs
 
     @classmethod
-    def create_message(cls, id: int, msg: str, data: str, program_id: str) -> None:
+    def create_message(cls, id: str, msg: str, data: str, program_id: str) -> None:
         cls.programs = cls._load_data()
-        device_id = cls.devices[int(id)].id
+        for dev in cls.devices:
+            if id == dev.__class__.__name__:
+                device_id = dev.id
         message = Message.objects.create(
             device_id=device_id,
             msg_type=msg,

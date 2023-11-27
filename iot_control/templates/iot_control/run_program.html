@@ -22,7 +22,9 @@
     </form>
 </div>
 <div>
-    {{ running }}
+    {% for i in running%}
+    <p>{{ i }}</p>
+    {% endfor %}
 </div>
 <div>
 <a href="/iot"><input type=button value="Previous Page"></a>
